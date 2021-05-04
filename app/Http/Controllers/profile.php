@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Image;
+
 class profile extends Controller
 {
     public function view(){
@@ -23,16 +25,42 @@ class profile extends Controller
     }
 
     public function updateProfile(Request $request){
+
         $user= User::find(Auth::user()->id);
+        $profilePhoto= $request->file('profilePhoto');
+        
         if($user){
-            $user->name = $request->name;
-            $user->bio = $request->bio;
-            $user->email = $request->email;
-            $user->save();
-            return redirect()->back()->with('message','your profile has been updated');
+            if($profilePhoto){
+                $name_generate = hexdec(uniqid()).'.'.$profilePhoto->getClientOriginalExtension();
+                Image::make($profilePhoto)->resize(100,100)->save('image/profile/'.$name_generate);
+                $last_image='image/profile/'.$name_generate;
+                $user->profile_photo_path = $last_image;
+                $user->status = 1;
+                $user->name = $request->name;
+                $user->bio = $request->bio;
+                $user->email = $request->email;
+                $user->save();
+                return redirect()->back()->with('message','your profile has been updated');    
+            }else{
+
+                $user->name = $request->name;
+                $user->bio = $request->bio;
+                $user->email = $request->email;
+                $user->save();
+                return redirect()->back()->with('message','your profile has been updated');    
+            
+            }
+            
         }else{
             return redirect()->back()->with('message','something went wrong');
         }
+    }
+
+    public function deleteProfilePhoto(){
+        $user= User::find(Auth::user()->id);
+        $profilePhoto = $user->profile_photo_path;
+        unlink($profilePhoto);
+        user::find($user->id)->delete($user->profile_photo_path);
     }
 
     public function changePassword(){

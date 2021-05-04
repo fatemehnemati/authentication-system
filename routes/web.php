@@ -28,6 +28,8 @@ Route::get('/myProfile',[profile::class,'myProfile']);
 
 Route::post('/updateProfile',[profile::class,'updateProfile']);
 
+Route::post('/deleteProfilePhoto',[profile::class,'deleteProfilePhoto']);
+
 Route::get('/changePassword',[profile::class,'changePassword']);
 
 Route::post('/updatePassword',[profile::class,'updatePassword']);

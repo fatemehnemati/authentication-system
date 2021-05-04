@@ -718,15 +718,24 @@
                   <!-- User Account -->
                   <li class="dropdown user-menu">
                     <button href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                      <img src="{{ Auth::user()->profile_photo_url }}" class="user-image" alt="User Image" />
+                      @if (Auth::user()->status == 0)
+                      <img src="{{ asset('image/profile/profileDefault.png') }}" class="user-image" alt="User Image" />
+                      @else
+                      <img src="{{ Auth::user()->profile_photo_path }}" class="user-image" alt="User Image" />
+                      @endif
                       <span class="d-none d-lg-inline-block">{{ Auth::user()->name }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
                       <!-- User image -->
                       <li class="dropdown-header">
-                        <img src="{{ Auth::user()->profile_photo_url }}" class="img-circle" alt="User Image" />
+                        @if (Auth::user()->status == 0)
+                        <img src="{{ asset('image/profile/profileDefault.png') }}" class="img-circle" alt="User Image" />
+                        @else
+                        <img src="{{ Auth::user()->profile_photo_path }}" class="img-circle" alt="User Image" />
+                        @endif
                         <div class="d-inline-block">
                             {{ Auth::user()->name }} <small class="pt-1">{{ Auth::user()->email }}</small>
+                            <small class="pt-1">joined : {{ Auth::user()->created_at->diffForHumans() }}</small>
                         </div>
                       </li>
 
